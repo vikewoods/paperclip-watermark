@@ -43,7 +43,7 @@ And then execute:
 
 Or install it yourself as:
 ```ruby
-$ gem install paperclip-watermark
+gem install paperclip-watermark
 ```
 
 ## Contributing
@@ -53,7 +53,3 @@ $ gem install paperclip-watermark
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
-
-
-```ruby
-puts 'even highlighting works, it is beautiful'
