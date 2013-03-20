@@ -29,22 +29,22 @@ end
 ## Installation
 
 Add this line to your application's Gemfile:
-
-    gem 'paperclip-watermark'
-
+```ruby
+gem 'paperclip-watermark'
+```
 or install from github:
-
-    gem 'paperclip-watermark', :github => 'vikewoods/paperclip-watermark'
-
+```ruby
+gem 'paperclip-watermark', :github => 'vikewoods/paperclip-watermark'
+```
 
 And then execute:
 
     $ bundle install
 
 Or install it yourself as:
-
-    $ gem install paperclip-watermark
-
+```ruby
+$ gem install paperclip-watermark
+```
 
 ## Contributing
 
