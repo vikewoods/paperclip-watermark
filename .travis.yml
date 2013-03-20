@@ -1,7 +1,3 @@
 language: ruby
 rvm:
   - "1.9.3"
-env:
-  - "rack=1.4.5"
-  - "rack=master"
-before_install: gem install bundler
