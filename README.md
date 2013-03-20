@@ -1,4 +1,5 @@
-# PaperclipWatermark
+
+# PaperclipWatermark [![Build Status](https://travis-ci.org/vikewoods/paperclip-watermark.png)](https://travis-ci.org/vikewoods/paperclip-watermark)
 
 Papercli Watermark processor
 
