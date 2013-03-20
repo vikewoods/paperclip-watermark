@@ -1,4 +1,4 @@
-# PaperclipWatermark [![Build Status](https://travis-ci.org/vikewoods/paperclip-watermark.png)](https://travis-ci.org/vikewoods/paperclip-watermark)
+# PaperclipWatermark [![Dependency Status](https://gemnasium.com/vikewoods/paperclip-watermark.png)](https://gemnasium.com/vikewoods/paperclip-watermark) [![Build Status](https://travis-ci.org/vikewoods/paperclip-watermark.png)](https://travis-ci.org/vikewoods/paperclip-watermark)
 
 Papercli Watermark processor
 
