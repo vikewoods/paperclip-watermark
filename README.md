@@ -7,7 +7,7 @@ Papercli Watermark processor
 Edit your paperclip model:
 
 ```ruby
-# app/models/asset.rb
+# app/models/assets.rb
 
 class Asset < ActiveRecord::Base
   attr_accessible :attachment
