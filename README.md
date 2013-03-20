@@ -16,7 +16,7 @@ class Asset < ActiveRecord::Base
   has_attached_file :attachment, :processors => [:watermark],
                     :styles => { 
                                  :thumb => '150x150>', 
-                                 :original => { :geometry => '800>' :watermark_path => "#{Rails.root}/public/images/logo.png" } 
+                                 :original => { :geometry => '800>', :watermark_path => "#{Rails.root}/public/images/logo.png" } 
                                },
                     :url    => '/assets/attachment/:id/:style/:basename.:extension',
                     :path   => ':rails_root/public/assets/attachment/:id/:style/:basename.:extension',
