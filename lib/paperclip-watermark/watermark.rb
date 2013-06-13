@@ -81,20 +81,16 @@ module Paperclip
       File.expand_path(destination.path)
     end
 
+    def target_geometry
+      @target_geometry || @current_geometry
+    end
+
     def transformation_command
-      if @target_geometry.present?
-        scale, crop = @current_geometry.transformation_to(@target_geometry, crop?)
-        trans = %W[-resize #{scale}]
-        trans += %W[-crop #{crop} +repage] if crop
-        trans << convert_options if convert_options?
-        trans
-      else
-        scale, crop = @current_geometry.transformation_to(@current_geometry, crop?)
-        trans = %W[-resize #{scale}]
-        trans += %W[-crop #{crop} +repage] if crop
-        trans << convert_options if convert_options?
-        trans
-      end
+      scale, crop = @current_geometry.transformation_to(target_geometry, crop?)
+      trans = %W[-resize #{scale}]
+      trans += %W[-crop #{crop} +repage] if crop
+      trans << convert_options if convert_options?
+      trans
     end
   end
 end
