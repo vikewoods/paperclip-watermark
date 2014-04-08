@@ -78,7 +78,7 @@ module Paperclip
     end
 
     def tofile(destination)
-      File.expand_path(destination.path)
+      [@format, File.expand_path(destination.path)].compact.join(':')
     end
 
     def transformation_command
