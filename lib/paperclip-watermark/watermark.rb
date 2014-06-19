@@ -40,7 +40,7 @@ module Paperclip
 
     # Returns true if the image is meant to make use of additional convert options.
     def convert_options?
-      not @convert_options.blank?
+      not [*@convert_options].reject(&:blank?).empty?
     end
 
     # Performs the conversion of the +file+ into a watermark. Returns the Tempfile
@@ -78,7 +78,7 @@ module Paperclip
     end
 
     def tofile(destination)
-      File.expand_path(destination.path)
+      [@format, File.expand_path(destination.path)].compact.join(':')
     end
 
     def transformation_command
@@ -86,13 +86,13 @@ module Paperclip
         scale, crop = @current_geometry.transformation_to(@target_geometry, crop?)
         trans = %W[-resize #{scale}]
         trans += %W[-crop #{crop} +repage] if crop
-        trans << convert_options if convert_options?
+        trans += [*convert_options] if convert_options?
         trans
       else
         scale, crop = @current_geometry.transformation_to(@current_geometry, crop?)
         trans = %W[-resize #{scale}]
         trans += %W[-crop #{crop} +repage] if crop
-        trans << convert_options if convert_options?
+        trans += [*convert_options] if convert_options?
         trans
       end
     end
