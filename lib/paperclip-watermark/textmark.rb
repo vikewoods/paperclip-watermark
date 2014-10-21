@@ -24,7 +24,7 @@ module Paperclip
 
       command = "convert"
       params = "-gravity #{@position} -pointsize #{@size} -fill #{@color} " \
-               "-annotate #{@offset} #{@text} #{fromfile} #{tofile(dst)}"
+               "-annotate #{@offset} \"#{@text}\" #{fromfile} #{tofile(dst)}"
 
       begin
         success = Paperclip.run(command, params)
