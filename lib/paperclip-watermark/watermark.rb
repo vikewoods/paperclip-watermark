@@ -20,11 +20,11 @@ module Paperclip
       @target_geometry  = Geometry.parse geometry
       @current_geometry = Geometry.from_file @file
       @convert_options  = options[:convert_options]
-      @whiny            = options[:whiny].nil? ? true : options[:whiny]
+      @whiny            = options[:whiny].nil? || options[:whiny]
       @format           = options[:format]
       @watermark_path   = options[:watermark_path]
       @position         = options[:position].nil? ? 'SouthEast' : options[:position]
-      @overlay          = options[:overlay].nil? ? true : false
+      @overlay          = options[:overlay].nil?
       @current_format   = File.extname(@file.path)
       @basename         = File.basename(@file.path, @current_format)
     end
@@ -59,7 +59,7 @@ module Paperclip
 
       if watermark_path
         command = 'composite'
-        params = %W[-gravity #{@position} #{watermark_path} #{tofile(dst)}]
+        params  = %W[-gravity #{@position} #{watermark_path} #{tofile(dst)}]
         params << tofile(dst)
         begin
           Paperclip.run(command, params.flatten.compact.join(' '))
@@ -80,19 +80,13 @@ module Paperclip
     end
 
     def transformation_command
-      if @target_geometry.present?
-        scale, crop = @current_geometry.transformation_to(@target_geometry, crop?)
-        trans = %W[-resize #{scale}]
-        trans += %W[-crop #{crop} +repage] if crop
-        trans += [*convert_options] if convert_options?
-        trans
-      else
-        scale, crop = @current_geometry.transformation_to(@current_geometry, crop?)
-        trans = %W[-resize #{scale}]
-        trans += %W[-crop #{crop} +repage] if crop
-        trans += [*convert_options] if convert_options?
-        trans
-      end
+      geometry = @target_geometry.present? ? @target_geometry : @current_geometry
+      scale, crop = @current_geometry.transformation_to(geometry, crop?)
+
+      trans  = %W[-resize #{scale}]
+      trans += %W[-crop #{crop} +repage] if crop
+      trans += [*convert_options] if convert_options?
+      trans
     end
   end
 end
