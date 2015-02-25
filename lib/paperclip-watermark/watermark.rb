@@ -12,21 +12,19 @@ module Paperclip
     # Handles watermarking of images that are uploaded.
     attr_accessor :current_geometry, :target_geometry, :format, :whiny, :convert_options, :watermark_path, :overlay, :position
 
-    def initialize file, options = {}, attachment = nil
+    def initialize(file, options = {}, attachment = nil)
       super
       geometry          = options[:geometry]
       @file             = file
-      if geometry.present?
-        @crop             = geometry[-1,1] == '#'
-      end
+      @crop             = geometry[-1, 1] == '#' if geometry.present?
       @target_geometry  = Geometry.parse geometry
       @current_geometry = Geometry.from_file @file
       @convert_options  = options[:convert_options]
-      @whiny            = options[:whiny].nil? ? true : options[:whiny]
+      @whiny            = options[:whiny].nil? || options[:whiny]
       @format           = options[:format]
       @watermark_path   = options[:watermark_path]
-      @position         = options[:position].nil? ? "SouthEast" : options[:position]
-      @overlay          = options[:overlay].nil? ? true : false
+      @position         = options[:position].nil? ? 'SouthEast' : options[:position]
+      @overlay          = options[:overlay].nil?
       @current_format   = File.extname(@file.path)
       @basename         = File.basename(@file.path, @current_format)
     end
@@ -40,31 +38,31 @@ module Paperclip
 
     # Returns true if the image is meant to make use of additional convert options.
     def convert_options?
-      not [*@convert_options].reject(&:blank?).empty?
+      ![*@convert_options].reject(&:blank?).empty?
     end
 
     # Performs the conversion of the +file+ into a watermark. Returns the Tempfile
     # that contains the new image.
     def make
-      dst = Tempfile.new([@basename, @format].compact.join("."))
+      dst = Tempfile.new([@basename, @format].compact.join('.'))
       dst.binmode
 
-      command = "convert"
-      params = [fromfile]
+      command = 'convert'
+      params  = [fromfile]
       params += transformation_command
       params << tofile(dst)
       begin
-        success = Paperclip.run(command, params.flatten.compact.collect{|e| "'#{e}'"}.join(" "))
+        Paperclip.run(command, params.flatten.compact.join(' '))
       rescue Paperclip::Errors::CommandNotFoundError
         raise Paperclip::Errors::CommandNotFoundError, "There was an error resizing and cropping #{@basename}" if @whiny
       end
 
       if watermark_path
-        command = "composite"
-        params = %W[-gravity #{@position} #{watermark_path} #{tofile(dst)}]
+        command = 'composite'
+        params  = %W[-gravity #{@position} #{watermark_path} #{tofile(dst)}]
         params << tofile(dst)
         begin
-          success = Paperclip.run(command, params.flatten.compact.collect{|e| "'#{e}'"}.join(" "))
+          Paperclip.run(command, params.flatten.compact.join(' '))
         rescue Paperclip::Errors::CommandNotFoundError
           raise Paperclip::Errors::CommandNotFoundError, "There was an error processing the watermark for #{@basename}" if @whiny
         end
@@ -82,19 +80,13 @@ module Paperclip
     end
 
     def transformation_command
-      if @target_geometry.present?
-        scale, crop = @current_geometry.transformation_to(@target_geometry, crop?)
-        trans = %W[-resize #{scale}]
-        trans += %W[-crop #{crop} +repage] if crop
-        trans += [*convert_options] if convert_options?
-        trans
-      else
-        scale, crop = @current_geometry.transformation_to(@current_geometry, crop?)
-        trans = %W[-resize #{scale}]
-        trans += %W[-crop #{crop} +repage] if crop
-        trans += [*convert_options] if convert_options?
-        trans
-      end
+      geometry = @target_geometry.present? ? @target_geometry : @current_geometry
+      scale, crop = @current_geometry.transformation_to(geometry, crop?)
+
+      trans  = %W[-resize #{scale}]
+      trans += %W[-crop #{crop} +repage] if crop
+      trans += [*convert_options] if convert_options?
+      trans
     end
   end
 end
